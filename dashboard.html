@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFrame & Custom Event Catcher Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Header Navbar -->
+    <header class="navbar">
+      <div class="nav-left">
+        <div class="logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="18" rx="3"></rect>
+            <path d="M2 9h20"></path>
+            <path d="M9 14l2 2 4-4"></path>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1>IFrame & Custom Event Catcher</h1>
+          <span class="version">v1.0.0 &bull; Persistent Storage & Auto-Clean</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="stream">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Live Stream
+        </button>
+        <button class="nav-tab" data-tab="sandbox">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          Test Sandbox
+        </button>
+        <button class="nav-tab" data-tab="settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Retention & Settings
+        </button>
+      </nav>
+
+      <div class="nav-right" style="display: flex; align-items: center; gap: 12px;">
+        <select id="dashThemeSelect" class="select-input" style="padding: 5px 10px; font-size: 12px;">
+          <option value="midnight">🌙 Midnight Cyber</option>
+          <option value="vercel">▲ Vercel Dark</option>
+          <option value="synthwave">🌌 Neon Synthwave</option>
+          <option value="emerald">🌲 Forest Emerald</option>
+          <option value="solar">⚡ Solar Flare</option>
+          <option value="light">☀️ Clean Light</option>
+        </select>
+        <div class="status-pill" id="globalStatusPill">
+          <span class="dot"></span>
+          <span id="globalStatusText">Monitoring Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="main-content">
+
+      <!-- ================= TAB 1: LIVE EVENT STREAM ================= -->
+      <section class="tab-panel active" id="tab-stream">
+        <!-- Controls Toolbar -->
+        <div class="toolbar">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" placeholder="Search event payload, origin, frame URL, or name...">
+          </div>
+
+          <div class="filter-group">
+            <select id="eventTypeFilter" class="select-input">
+              <option value="all">All Event Types</option>
+              <option value="postMessage_received">postMessage (Inbound)</option>
+              <option value="postMessage_sent">postMessage (Outbound)</option>
+              <option value="custom_event">Custom Events</option>
+              <option value="dom_event">DOM Events</option>
+              <option value="iframe_loaded">Iframe Loaded</option>
+              <option value="iframe_created">Iframe Created</option>
+            </select>
+
+            <select id="frameFilter" class="select-input">
+              <option value="all">All Frames</option>
+              <option value="iframe">Iframe Only</option>
+              <option value="main">Main Window Only</option>
+            </select>
+
+            <button id="autoRefreshBtn" class="btn btn-outline active" title="Toggle Auto Refresh Stream">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Auto Refresh: ON
+            </button>
+          </div>
+
+          <div class="action-group">
+            <button id="exportJsonBtn" class="btn btn-secondary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export JSON
+            </button>
+            <button id="exportCsvBtn" class="btn btn-secondary">Export CSV</button>
+            <button id="clearStreamBtn" class="btn btn-danger">Clear All</button>
+          </div>
+        </div>
+
+        <!-- Event Inspector Split View -->
+        <div class="split-view">
+          <!-- Left Table: Log Stream -->
+          <div class="log-list-container">
+            <div class="list-header">
+              <span class="col col-expand"></span>
+              <span class="col col-time">Time</span>
+              <span class="col col-source">Source</span>
+              <span class="col col-type">Type</span>
+              <span class="col col-name">Event Name</span>
+              <span class="col col-origin">Payload Preview / Origin</span>
+              <span class="col col-actions">Copy</span>
+            </div>
+            <div class="list-body" id="eventListBody">
+              <div class="empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <h3>No Events Caught Yet</h3>
+                <p>Events dispatched in pages or iframes will appear here in real-time. Use the Test Sandbox tab to generate test events.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Pane: Payload Inspector -->
+          <div class="inspector-container">
+            <div class="inspector-header">
+              <div class="inspector-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <span>Payload Inspector</span>
+              </div>
+              <button id="copyPayloadBtn" class="btn btn-xs btn-outline">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy JSON
+              </button>
+            </div>
+
+            <div class="inspector-body" id="inspectorBody">
+              <div class="inspector-placeholder">
+                <p>Select an event from the list on the left to inspect detailed frame context and JSON payload.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= TAB 2: TEST SANDBOX ================= -->
+      <section class="tab-panel" id="tab-sandbox">
+        <div class="sandbox-container">
+          <div class="sandbox-intro">
+            <h2>Interactive Event Test Sandbox</h2>
+            <p>Test iframe message passing, custom DOM event dispatches, and iframe load lifecycles in real-time. Events generated here will immediately trigger the extension's interceptors.</p>
+          </div>
+
+          <div class="sandbox-grid">
+            <!-- Sandbox Controls -->
+            <div class="card sandbox-controls">
+              <h3>Dispatch Generator</h3>
+              
+              <div class="form-group">
+                <label>Test postMessage Payload</label>
+                <textarea id="testPostMessageText" rows="4" class="code-input">{
+  "action": "user_checkout",
+  "step": 2,
+  "cartId": "cart_9921",
+  "amount": 149.99
+}</textarea>
+              </div>
+
+              <div class="button-grid">
+                <button id="sendParentToIframeBtn" class="btn btn-primary">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                  Send postMessage to Iframe 1
+                </button>
+                <button id="sendIframeToParentBtn" class="btn btn-secondary">
+                  Send from Iframe 1 to Parent
+                </button>
+              </div>
+
+              <hr class="divider">
+
+              <div class="form-group">
+                <label>Test CustomEvent Generator</label>
+                <div class="input-row">
+                  <input type="text" id="customEventNameInput" value="analytics_track" placeholder="Event Name">
+                  <button id="fireCustomEventBtn" class="btn btn-accent">
+                    Dispatch CustomEvent
+                  </button>
+                </div>
+              </div>
+
+              <hr class="divider">
+
+              <button id="createDynamicIframeBtn" class="btn btn-outline">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Dynamically Insert New Iframe
+              </button>
+            </div>
+
+            <!-- Live Test Iframes Window -->
+            <div class="card sandbox-iframes">
+              <h3>Live Embedded Sandbox Iframes</h3>
+              
+              <div class="iframe-wrapper-grid">
+                <div class="iframe-box">
+                  <div class="iframe-tag">Iframe #1 (Same-Origin Simulation)</div>
+                  <iframe id="sandboxIframe1" srcdoc="
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                      <style>
+                        body { background: #0f172a; color: #e2e8f0; font-family: sans-serif; padding: 12px; font-size: 12px; margin: 0; }
+                        button { background: #6366f1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+                        #log { background: #1e293b; padding: 8px; border-radius: 4px; font-family: monospace; margin-top: 8px; min-height: 50px; font-size: 11px; }
+                      </style>
+                    </head>
+                    <body>
+                      <strong>Embedded Iframe #1</strong>
+                      <p>Receives & dispatches postMessages.</p>
+                      <button id='innerBtn'>Fire Inside CustomEvent</button>
+                      <div id='log'>Ready for messages...</div>
+                      <script>
+                        window.addEventListener('message', (e) => {
+                          if (e.data && e.data.__IFRAME_EVENT_CATCHER_BRIDGE__) return;
+                          document.getElementById('log').innerText = 'Received: ' + JSON.stringify(e.data);
+                        });
+                        document.getElementById('innerBtn').addEventListener('click', () => {
+                          window.dispatchEvent(new CustomEvent('iframe_internal_click', { detail: { origin: 'iframe1', time: Date.now() } }));
+                        });
+                      </script>
+                    </body>
+                    </html>
+                  "></iframe>
+                </div>
+
+                <div class="iframe-box" id="dynamicIframeContainer">
+                  <div class="iframe-tag">Iframe #2 (Dynamic Insertion Container)</div>
+                  <div class="iframe-placeholder">
+                    <p>Click "Dynamically Insert New Iframe" to trigger iframe creation events.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= TAB 3: RETENTION & SETTINGS ================= -->
+      <section class="tab-panel" id="tab-settings">
+        <div class="settings-container">
+          <h2>Retention & Extension Settings</h2>
+
+          <div class="settings-grid">
+            <!-- Card 0: Visual Theme Options -->
+            <div class="card settings-card">
+              <div class="card-header-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a7 7 0 1 0 10 10"></path></svg>
+                <div>
+                  <h3>Extension Theme Palette</h3>
+                  <p class="sub">Choose your preferred visual theme for the extension interface.</p>
+                </div>
+              </div>
+
+              <div class="theme-palette-grid" id="themePaletteGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 8px;">
+                <div class="theme-swatch active" data-theme-id="midnight" style="background: #0f172a; border: 2px solid #6366f1; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center;">
+                  <span style="font-size: 18px; display: block;">🌙</span>
+                  <strong style="font-size: 12px; color: #fff;">Midnight Cyber</strong>
+                </div>
+                <div class="theme-swatch" data-theme-id="vercel" style="background: #000000; border: 2px solid #0070f3; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center;">
+                  <span style="font-size: 18px; display: block;">▲</span>
+                  <strong style="font-size: 12px; color: #ffffff;">Vercel Dark</strong>
+                </div>
+                <div class="theme-swatch" data-theme-id="synthwave" style="background: #18022b; border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; cursor: pointer; text-align: center;">
+                  <span style="font-size: 18px; display: block;">🌌</span>
+                  <strong style="font-size: 12px; color: #fdf2f8;">Neon Synthwave</strong>
+                </div>
+                <div class="theme-swatch" data-theme-id="emerald" style="background: #062016; border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; cursor: pointer; text-align: center;">
+                  <span style="font-size: 18px; display: block;">🌲</span>
+                  <strong style="font-size: 12px; color: #ecfdf5;">Forest Emerald</strong>
+                </div>
+                <div class="theme-swatch" data-theme-id="solar" style="background: #1c130b; border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; cursor: pointer; text-align: center;">
+                  <span style="font-size: 18px; display: block;">⚡</span>
+                  <strong style="font-size: 12px; color: #fffbeb;">Solar Flare</strong>
+                </div>
+                <div class="theme-swatch" data-theme-id="light" style="background: #ffffff; border: 2px solid rgba(0,0,0,0.1); border-radius: 8px; padding: 10px; cursor: pointer; text-align: center;">
+                  <span style="font-size: 18px; display: block;">☀️</span>
+                  <strong style="font-size: 12px; color: #0f172a;">Clean Light</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 1: Persistence & Retention Policy -->
+            <div class="card settings-card">
+              <div class="card-header-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <div>
+                  <h3>Auto-Cleanup Retention Policy</h3>
+                  <p class="sub">Logs older than the selected duration will be automatically purged by the background service worker.</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Automatic Retention Cleanup Period</label>
+                <select id="retentionSelect" class="select-input select-lg">
+                  <option value="1">1 Day</option>
+                  <option value="3">3 Days</option>
+                  <option value="7" selected>1 Week (Recommended)</option>
+                  <option value="14">2 Weeks</option>
+                  <option value="30">1 Month</option>
+                  <option value="0">Unlimited (Disable Auto-Cleanup)</option>
+                </select>
+              </div>
+
+              <div class="stats-box">
+                <div class="stat-row">
+                  <span>Total Events Stored:</span>
+                  <strong id="settingsTotalEvents">0</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Oldest Record Date:</span>
+                  <strong id="settingsOldestDate">N/A</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Newest Record Date:</span>
+                  <strong id="settingsNewestDate">N/A</strong>
+                </div>
+              </div>
+
+              <div class="btn-group">
+                <button id="saveRetentionBtn" class="btn btn-primary">Save Retention Setting</button>
+                <button id="forceCleanupBtn" class="btn btn-secondary">Run Auto-Clean Now</button>
+              </div>
+            </div>
+
+            <!-- Card 2: Custom Events & Filtering Rules -->
+            <div class="card settings-card">
+              <div class="card-header-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div>
+                  <h3>Custom Event Filtering</h3>
+                  <p class="sub">Configure custom event names to track and monitor across page windows and iframes.</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Configured Custom Event Names (comma separated)</label>
+                <textarea id="customEventsInput" rows="4" class="code-input">analytics_track, state_change, user_action, checkout_step</textarea>
+              </div>
+
+              <button id="saveCustomEventsBtn" class="btn btn-primary">Save Custom Event Rules</button>
+            </div>
+
+            <!-- Card 3: Storage Management & Reset -->
+            <div class="card settings-card danger-card">
+              <div class="card-header-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <div>
+                  <h3>Database Wipe</h3>
+                  <p class="sub">Permanently delete all captured iframe & custom event logs stored in IndexedDB.</p>
+                </div>
+              </div>
+
+              <p class="warning-text">This action cannot be undone. Make sure to export your logs if you need a backup.</p>
+              <button id="wipeDatabaseBtn" class="btn btn-danger btn-lg">Wipe Entire Event Database</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

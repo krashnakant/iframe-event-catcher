@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFrame & Custom Event Catcher - Chrome Extension</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: var(--bg-dark, #0b0f19);
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .hero {
+      max-width: 900px;
+      margin: 60px auto 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+      color: #fff;
+    }
+    .features-grid {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .feature-card h3 {
+      font-size: 1.2rem;
+      margin-top: 0;
+      color: #f1f5f9;
+    }
+    .feature-card p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #64748b;
+      font-size: 0.875rem;
+      border-top: 1px solid #1e293b;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>🚀 IFrame & Custom Event Catcher</h1>
+    <p>A Manifest V3 Chrome Extension to intercept, log, persist, and analyze cross-frame <code>postMessage</code> communications, iframe lifecycles, and custom DOM events in real time.</p>
+    <div class="cta-group">
+      <a href="dashboard.html" class="btn-primary">View Dashboard & Sandbox</a>
+      <a href="https://github.com/krashnakant/iframe-event-catcher" class="btn-secondary" target="_blank" rel="noopener">GitHub Repository</a>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>🛰️ PostMessage Interception</h3>
+      <p>Intercepts inbound, outbound, and cross-frame postMessage events across top windows and embedded iframes.</p>
+    </div>
+    <div class="feature-card">
+      <h3>⚡ Custom Event Monitoring</h3>
+      <p>Tracks dispatches of custom <code>CustomEvent</code> objects across all execution frames and main DOM worlds.</p>
+    </div>
+    <div class="feature-card">
+      <h3>💾 IndexedDB Persistence</h3>
+      <p>High-capacity log persistence using IndexedDB with configurable auto-cleanup and retention management.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🧪 Interactive Sandbox</h3>
+      <p>Built-in playground to generate test events, insert dynamic iframes, and inspect live payload structures.</p>
+    </div>
+  </div>
+
+  <footer>
+    Maintainer: <strong>krashnakant</strong> &bull; Open Source under MIT License
+  </footer>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFrame & Custom Event Catcher</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="18" rx="3"></rect>
+            <path d="M2 9h20"></path>
+            <path d="M9 14l2 2 4-4"></path>
+          </svg>
+        </div>
+        <div class="title-group">
+          <h1>Event Catcher</h1>
+          <span class="sub">IFrame & Custom Event Monitor</span>
+        </div>
+      </div>
+      <div class="global-switch-wrap" title="Global Always-On Toggle">
+        <label class="switch">
+          <input type="checkbox" id="globalToggle">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Page Activation Card -->
+    <div class="card status-card">
+      <div class="status-header">
+        <div class="status-indicator disabled" id="statusBadge">
+          <span class="pulse-dot"></span>
+          <span id="statusText">Disabled for Page</span>
+        </div>
+        <span class="retention-pill" id="retentionPill">Retention: 1 Week</span>
+      </div>
+
+      <!-- Main Action: Click to Enable for Page -->
+      <button id="enablePageBtn" class="btn btn-enable-page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        Enable Catching on this Page
+      </button>
+
+      <div class="metrics-grid" style="margin-top: 12px;">
+        <div class="metric-item">
+          <span class="metric-value" id="currentTabEvents">0</span>
+          <span class="metric-label">Page Events</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value" id="totalDbEvents">0</span>
+          <span class="metric-label">Total Stored Logs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frame Context Card -->
+    <div class="card frame-info-card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <span>Active Tab Context</span>
+      </div>
+      <div class="tab-details">
+        <div class="detail-row">
+          <span class="detail-key">Page:</span>
+          <span class="detail-val" id="activeTabUrl">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Selector Card -->
+    <div class="card theme-card" style="padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Theme:</span>
+      <select id="themeSelect" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--bg-card-border); color: var(--text-main); font-size: 11px; padding: 3px 8px; border-radius: 6px; outline: none; cursor: pointer;">
+        <option value="midnight">🌙 Midnight Cyber</option>
+        <option value="vercel">▲ Vercel Dark</option>
+        <option value="synthwave">🌌 Neon Synthwave</option>
+        <option value="emerald">🌲 Forest Emerald</option>
+        <option value="solar">⚡ Solar Flare</option>
+        <option value="light">☀️ Clean Light</option>
+      </select>
+    </div>
+
+    <!-- Actions Footer -->
+    <div class="actions-group">
+      <button id="openDashboardBtn" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        Open Full Dashboard
+      </button>
+
+      <div class="btn-row">
+        <button id="clearLogsBtn" class="btn btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear Logs
+        </button>
+        <button id="cleanOldBtn" class="btn btn-secondary" title="Purge events older than 1 week">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+          Auto Clean Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
